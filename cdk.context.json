@@ -1,0 +1,16 @@
+{
+  "ssm:account=553800827446:parameterName=coreRouterId:region=us-east-2": "tgw-0db223341a836b6be",
+  "availability-zones:account=553800827446:region=us-east-2": [
+    "us-east-2a",
+    "us-east-2b",
+    "us-east-2c"
+  ],
+  "availability-zones:account=553800827446:region=us-west-2": [
+    "us-west-2a",
+    "us-west-2b",
+    "us-west-2c",
+    "us-west-2d"
+  ],
+  "ssm:account=553800827446:parameterName=/test/coreRouterId:region=us-west-2": "tgw-068908364539d5455",
+  "ssm:account=553800827446:parameterName=/test/edgeRouteTableId:region=us-west-2": "tgw-rtb-086d79cdadafcc132"
+}
