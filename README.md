@@ -1,4 +1,4 @@
-# Network Resources - Terraform Deployment
+# Network Resources - CDK Deployment
 
 ## Network Topology
 
@@ -7,24 +7,24 @@
 #
 ## Individual Resource Stacks
 - Core Router
-  * `coreRouter.tf` - includes TGW, TGW Route tables, SSM Parameter
+  * `core_network-stack.ts` - includes TGW, TGW Route tables, SSM Parameter
 - Core VPC
-  * `coreVpc.tf` - includes VPC, Subnets, Route tables, RT & TGW attachments
+  * `core_vpc-stack.ts` - includes VPC, Subnets, Route tables, RT & TGW attachments
 - Member VPC
-  * `memberVpc.tf` - includes VPC, Subnets, Route tables & routes, TGW Attachments, Rt53 zones & rules
+  * `member_vpc-stack.ts` - includes VPC, Subnets, Route tables & routes, TGW Attachments, Rt53 zones & rules
 - Edge VPC
-  * `edgeVpc.tf` - includes VPC, Subnets, Route tables, RT & TGW attachments
-  * `edgeGw.tf` - includes IGW, NAT gateways, and routes
+  * `edge_vpc-stack.ts` - includes VPC, Subnets, Route tables, RT & TGW attachments
+  * `edge_gw-stack.ts` - includes IGW, NAT gateways, and routes
 - VPN Connection
-  * `vpnConnection.tf` - includes CGW, VPN Connections, and TGW attachments
+  * `vpn_endpoint-stack.ts` - includes CGW, VPN Connections, and TGW attachments
 - Route53 Resolvers
-  * `rt53resolvers.tf` - includes Rt53 PHZs, Inbound Endpoints, Outbound Endpoints, Resolver Rules
+  * `rt53_resolvers-stack.ts` - includes Rt53 PHZs, Inbound Endpoints, Outbound Endpoints, Resolver Rules
 - VPC Endpoints
-  * `vpcEndpoints.tf` - includes VPC gateway and interface endpoints
+  * `vpc_endpoints-stack.ts` - includes VPC gateway and interface endpoints
 - Direct Connect
-  * `dxResources.tf` - included DxGw, DX connections, VIFs, routes and attachments
+  * `dx_resources-stack.ts` - included DxGw, DX connections, VIFs, routes and attachments
 - Security Groups
-  * `securityGroups.tf` - includes Security Groups used by other stacks
+  * `security_groups-stack.ts` - includes Security Groups used by other stacks
 
 ![Resource Stacks](./assets/resourceStacks.png)
 
@@ -41,14 +41,14 @@
 #
 ## Deployment commands
 
-1. `terraform init` - to initiate Terraform in the directory
-2. `terraform validate` - validate configuration
-3. `terraform plan` - show changes required by the configuration
-4. `terraform apply` - deploy configured resources
-5. `terraform destroy` - delete all resources in state
+1. `npm install` - to install all required modules
+2. `cdk ls` - list all available cdk stacks 
+3. `cdk synth [stack name]` - show compiled CloudFormation template for resources
+4. `cdk deploy [stack name]` - deploy stack and resources
+5. `cdk destroy [stack name]` - delete stack and resources
 
 #
-## Terraform Variables
+## Stack Variables
 
 Variable | Value | Description
 ------------ | ------------- | -------------
