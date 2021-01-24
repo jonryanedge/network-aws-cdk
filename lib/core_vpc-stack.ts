@@ -1,7 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ssm from '@aws-cdk/aws-ssm';
-import { Subnet, SubnetNetworkAclAssociation } from '@aws-cdk/aws-ec2';
 
 interface RegionalStackProps extends cdk.StackProps {
     deploymentId: string;
@@ -20,12 +19,13 @@ export class CoreVpcStack extends cdk.Stack {
 
     // Get SSM parameters
     const tgwId = ssm.StringParameter.valueFromLookup(this, tgwSsm);
-    
 
     // Define core vpc 
     const coreVpc = new ec2.Vpc(this, 'vpc', {
         cidr: props.vpcCidr,
-        subnetConfiguration: [],
+        subnetConfiguration: [
+            { cidrMask: 26, name: 'net', subnetType: ec2.SubnetType.ISOLATED, }
+        ],
         flowLogs: {
           VpcFlowLogs: {
             destination: ec2.FlowLogDestination.toCloudWatchLogs(),
@@ -47,7 +47,9 @@ export class CoreVpcStack extends cdk.Stack {
         cidrBlock: props.subnetCidrs[0],
         mapPublicIpOnLaunch: false,
         tags: [
-            { key: 'Name', value: 'core01' }
+            { key: 'Name', value: 'core01' },
+            { key: 'aws-cdk:subnet-type', value: 'Private' },
+            { key: 'aws-cdk:subnet-name', value: 'Core' }
         ]
     });
 
@@ -110,5 +112,13 @@ export class CoreVpcStack extends cdk.Stack {
         transitGatewayId: tgwId
     });
     coreVpcTransitRoute.addDependsOn(coreVpcTgwAttachment);
+
+    // Define core vpc endpoints - ssm +
+    const ssmEndpoint = new ec2.InterfaceVpcEndpoint(this, 'ssmEndpoint', {
+        service: ec2.InterfaceVpcEndpointAwsService.SSM,
+        vpc: coreVpc,
+        privateDnsEnabled: true,
+        subnets: {subnetType: ec2.SubnetType.ISOLATED},
+    });
   }
 }

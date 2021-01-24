@@ -4,6 +4,7 @@ import * as cdk from '@aws-cdk/core';
 import { CoreNetworkStack } from '../lib/core_network-stack';
 import { CoreVpcStack } from '../lib/core_vpc-stack';
 import { EdgeVpcStack } from '../lib/edge_vpc-stack';
+import { BastionStack } from '../lib/bastion_hosts-stack';
 
 const deploymentId = 'test';
 const azs = [ 'us-west-2a', 'us-west-2b', 'us-west-2c' ];
@@ -21,14 +22,14 @@ const env = {
 }
 
 const app = new cdk.App();
-new CoreNetworkStack(app, 'router', {
+const router = new CoreNetworkStack(app, 'router', {
     env: env,
     deploymentId: deploymentId,
     regionAsn: regionAsn,
     regionCidr: regionIp,
 });
 
-new CoreVpcStack(app, 'core', {
+const core = new CoreVpcStack(app, 'core', {
     env: env,
     deploymentId: deploymentId,
     regionCidr: regionIp,
@@ -37,7 +38,7 @@ new CoreVpcStack(app, 'core', {
     subnetCidrs: cores
 });
 
-new EdgeVpcStack(app, 'edge', {
+const edge = new EdgeVpcStack(app, 'edge', {
     env: env,
     deploymentId: deploymentId,
     regionCidr: regionIp,
@@ -45,5 +46,10 @@ new EdgeVpcStack(app, 'edge', {
     subnetAzs: azs,
     pubCidrs: edges,
     privCidrs: nats
+});
+
+new BastionStack(app, 'bastion', {
+    env: env,
+    deploymentId: deploymentId,
 });
 
